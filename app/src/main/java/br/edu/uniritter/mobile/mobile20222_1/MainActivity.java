@@ -6,56 +6,40 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import br.edu.uniritter.mobile.mobile20222_1.model.User;
+import br.edu.uniritter.mobile.mobile20222_1.viewmodel.Login;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    private final String TAG = "MainActivity";
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getIntent().getIntExtra("userId",-1);
-        Log.d(TAG, "onCreate: começando a bagaça");
-        setContentView(R.layout.activity_main);
-        /*(R.id.botao).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), Activity2.class);
-                startActivity(intent);
-            }
-        });
-        */
-        //findViewById(R.id.botao).setOnClickListener( this );
-        View.OnClickListener ocl = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: Alguém clicou ocl");
-                Intent intent = new Intent(view.getContext(), Activity2.class);
-                intent.putExtra("userId", 1);
+  private EditText userLogin;
+  private EditText password;
+  private TextView response;
 
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+  }
 
-                startActivity(intent);
-            }
-        };
+  @Override
+  public void onClick(View view) {
+    Login login = new Login();
 
+    userLogin = findViewById(R.id.login);
+    password = findViewById(R.id.password);
 
-        findViewById(R.id.button02).setOnClickListener( ocl );
-        findViewById(R.id.botao).setOnClickListener(
-                (view) -> {
-                    Log.d(TAG, "onClick: Alguém clicou lambda");
+    String loginString = userLogin.getText().toString();
+    String passwordString = password.getText().toString();
 
-                    Intent intent = new Intent(view.getContext(), Activity2.class);
-                    startActivity(intent);
-                });
-
+    if(login.loginCheck(loginString, passwordString)) {
+      Intent intent = new Intent(view.getContext(), Activity2.class);
+      startActivity(intent);
     }
-
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.button02) {
-            Intent intent = new Intent(view.getContext(), Activity2.class);
-            startActivity(intent);
-        }
+    else {
+      response = findViewById(R.id.response);
+      response.setText("Login ou senha incorreta, tente novamente.");
     }
+  }
 }
